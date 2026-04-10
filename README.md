@@ -35,10 +35,6 @@ The model represents students as nodes in a network with limited workload capaci
 2. Open `netlogo_simulation.nlogo`
 3. Click **Setup** → **Go**
 
-## 🎥 Simulation Preview
-
-![Cascade Simulation](task_cascade.gif)
-
 ## 📊 Outcome
 
 The system exhibits heavy-tailed avalanche distributions and intermittent dynamics, indicating power-law-like behavior and self-organized criticality.

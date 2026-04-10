@@ -1,34 +1,46 @@
 # Cascading Workload Dynamics in Student Networks
 
-This project models cascading workload dynamics in a network of interacting students using concepts from complexity science and self-organized criticality (SOC).
+This project explores cascading workload dynamics in student interaction networks using concepts from complexity science and self-organized criticality (SOC).
 
-## Files Included
+## 📁 Repository Structure
 
-* `project_code.ipynb` – Python simulation and data analysis (avalanche distribution, plots, power-law fitting)
-* `netlogo_simulation.nlogo` – Agent-based visualization of cascade dynamics
-* `task_cascade.gif` – Sample visualization of cascading behavior
-* `project_report.pdf` – Detailed report explaining model, methodology, and results
+* `project_code.ipynb` – Python simulation, avalanche analysis, and power-law fitting
+* `netlogo_simulation.nlogo` – Agent-based NetLogo model for cascade visualization
+* `project_latex.tex` – LaTeX source of the report
+* `project_report.pdf` – Final compiled report
+* `task_cascade.gif` – Simulation preview of cascading behavior
 
-## Overview
+## 🔍 Overview
 
-The model represents students as nodes in a network with limited workload capacity. When a node exceeds its threshold, excess workload is redistributed to neighbors, potentially triggering cascades (avalanches).
+The model represents students as nodes in a network with limited workload capacity. When a node exceeds its threshold, excess workload is redistributed to neighbors, potentially triggering cascading failures (avalanches).
 
-## Key Features
+## ⚙️ Features
 
-* Network-based simulation (Erdős–Rényi graph)
-* Threshold-driven cascade dynamics
-* Avalanche size analysis
-* Power-law fitting (τ ≈ 1.84) indicating SOC behavior
-* Python + NetLogo visualization
+* Random network (Erdős–Rényi model)
+* Threshold-based cascade dynamics
+* Avalanche size distribution analysis
+* Power-law fitting with exponent $\tau \approx 1.84$
+* Python and NetLogo-based visualization
 
-## How to Run
+## ▶️ How to Run
 
-1. Open `project_code.ipynb` in Jupyter Notebook and run all cells
-2. Open `netlogo_simulation.nlogo` in NetLogo and click **Setup → Go**
+### Python Simulation
 
-## Outcome
+1. Open `project_code.ipynb` in Jupyter Notebook
+2. Run all cells to generate results and plots
 
-The system exhibits heavy-tailed avalanche distributions and intermittent dynamics, suggesting self-organized criticality in workload propagation.
+### NetLogo Simulation
+
+1. Install NetLogo: https://ccl.northwestern.edu/netlogo/
+2. Open `netlogo_simulation.nlogo`
+3. Click **Setup** → **Go**
+
+## 🎥 Simulation Preview
+
+![Cascade Simulation](task_cascade.gif)
+
+## 📊 Outcome
+
+The system exhibits heavy-tailed avalanche distributions and intermittent dynamics, indicating power-law-like behavior and self-organized criticality.
 
 ---
-

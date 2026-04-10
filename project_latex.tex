@@ -1,0 +1,403 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx} 
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{float}
+\usepackage{setspace}
+\setstretch{1.1}
+\begin{document}
+
+\title{\textbf{\Large Emergence of Cascading Workload Dynamics in Student Interaction Networks\\
+\vspace{0.2cm}
+A Complexity Science Approach}}
+
+\author{
+ Deepti Bhardwaj \\
+Entry Number: 2023CH70103 \\
+\vspace{0.3cm}
+CLL 798 -- Complexity Science in Chemical Industry \\
+Instructor: Prof. Rajesh Khanna \\
+Department of Chemical Engineering \\
+Indian Institute of Technology Delhi
+}
+
+\date{\normalsize April 2026}
+\maketitle
+
+\begin{abstract}
+\noindent
+\normalsize
+Complex systems often exhibit emergent behavior arising from simple local interactions. In this project, we model a network of individuals (students) where tasks are assigned randomly and redistributed upon overload. The system demonstrates cascading failures (avalanches) driven by connectivity between individuals. Through simulation and analysis, we observe a heavy-tailed distribution of avalanche sizes, indicating power-law-like behavior and the absence of a characteristic scale. The results suggest that the system evolves toward a self-organized critical state, where small perturbations can trigger cascades of varying magnitudes.
+\end{abstract}
+
+
+\newpage
+\section{Introduction}
+Complexity science studies systems composed of many interacting components whose collective behavior cannot be easily inferred from individual parts. Such systems often display emergent phenomena such as avalanches, criticality, and scale-free behavior.
+
+In this project, we consider a simplified model of task distribution among students connected through a network. Each individual has a limited capacity to handle workload. When this capacity is exceeded, tasks are redistributed to neighboring individuals in the network. 
+
+This assumption is motivated by real-world academic interactions, where students are connected through collaborations, group assignments, shared resources, and peer assistance. When a student is overloaded, they often rely on or affect their immediate collaborators—for instance, by delegating tasks, delaying shared work, or requiring additional coordination. As a result, workload and stress are not isolated but propagate through interaction pathways.
+
+Thus, redistribution to neighbors represents the local transmission of workload through existing social and academic connections, capturing how dependencies between students can lead to cascading effects.
+
+
+\section{Model Description}
+
+The system considered in this study represents a network of interacting agents, where each agent corresponds to an individual handling a dynamically evolving workload. The network is modeled as a graph consisting of $N$ nodes, with edges representing pathways through which interactions and load transfers can occur.
+
+Each node $i$ is associated with a time-dependent variable $L_i(t)$, denoting the workload at time $t$. The system incorporates a finite capacity constraint, such that each node can sustain workload only up to a threshold $K$. This threshold represents practical limitations such as cognitive capacity, time availability, or resource constraints.
+
+The model is governed by a set of simple local rules that give rise to complex global behavior:
+
+\begin{itemize}
+\item \textbf{Stochastic Input (Noise):} At each time step, an external perturbation is introduced by randomly selecting a node and increasing its workload. This models unpredictable real-world inputs such as new tasks, deadlines, or external demands.
+
+\item \textbf{Threshold-Induced Instability:} When the workload at a node exceeds its capacity ($L_i > K$), the node becomes unstable. This instability represents the inability of an individual to handle additional load beyond a certain limit.
+
+\item \textbf{Local Redistribution:} An unstable node redistributes its excess workload to its neighboring nodes. This reflects the transfer of responsibility or influence through interactions, such as delegation, collaboration, or dependency.
+
+\item \textbf{Cascading Dynamics:} The redistribution of load may cause neighboring nodes to exceed their capacity, triggering further redistribution. This iterative process continues until the system reaches a stable configuration in which no node exceeds its threshold.
+
+
+\end{itemize}
+
+The cascading process described above defines an \textit{avalanche}, whose size is measured as the total number of nodes that become unstable during a single cascade event.
+
+A key feature of this model is that global system behavior is not imposed externally but emerges from local interactions between nodes. The interplay between stochastic input, threshold dynamics, and network connectivity determines whether perturbations remain localized or evolve into large-scale cascades.
+
+Thus, the model captures the essential characteristics of complex systems: sensitivity to initial perturbations, absence of centralized control, and emergence of system-wide behavior from simple microscopic rules.
+
+\section{Simulation Methodology}
+
+To investigate the dynamics of cascading overloads, a computational simulation of the proposed model was implemented using Python. The simulation captures the temporal evolution of workload across a network of interacting nodes and enables quantitative analysis of avalanche behavior.
+
+\subsection{Network Construction}
+
+The interaction network is modeled as a random graph generated using the Erd\H{o}s–R'enyi model. In this framework, a network of $N$ nodes is constructed such that each possible pair of nodes is connected with a probability $p$. This choice provides a simple yet flexible representation of connectivity, allowing control over the average number of interactions per node.
+
+The use of a random network is motivated by the absence of strict structural hierarchy in many real-world interaction systems, where connections may arise unpredictably. At the same time, varying the parameter $p$ allows exploration of how connectivity influences cascade dynamics.
+
+\subsection{Initialization}
+
+Initially, all nodes are assigned zero workload:
+\[
+L_i(0) = 0 \quad \forall i
+\]
+
+Each node is assigned a fixed capacity threshold $K$, representing the maximum workload it can sustain without failure. This threshold models practical limitations such as time, cognitive capacity, or resource constraints.
+
+\subsection{Dynamic Evolution}
+
+The system evolves in discrete time steps according to the following procedure:
+
+\begin{enumerate}
+\item \textbf{Injection of Noise:} At each time step, a node is selected uniformly at random, and its workload is increased by a small random amount. This represents stochastic external inputs and ensures continuous perturbation of the system.
+
+\item \textbf{Detection of Instability:} Nodes whose workload exceeds the threshold ($L_i > K$) are identified as unstable.
+
+\item \textbf{Load Redistribution:} Each unstable node redistributes its excess load to its immediate neighbors. This redistribution is governed by the connectivity of the network and reflects the transfer of burden or influence between interacting individuals.
+
+\item \textbf{Cascade Propagation:} Redistribution may cause neighboring nodes to exceed their thresholds, triggering further redistribution. This iterative process continues until all nodes return to a stable state.
+
+\item \textbf{Avalanche Measurement:} The number of nodes that become unstable during this process is recorded as the avalanche size corresponding to that time step.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{t.png}
+\end{figure}
+\end{enumerate}
+\subsection{Mathematical Formulation}
+
+The evolution of the workload is described by:
+
+\[
+L_i(t+1) = L_i(t) + \eta_i(t) + \sum_{j \in \mathcal{N}(i)} \Delta_{ji}(t)
+\]
+
+where $\eta_i(t)$ represents stochastic input and $\mathcal{N}(i)$ denotes neighboring nodes.
+
+Instability occurs when:
+\[
+L_i(t) > K
+\]
+
+Upon instability, redistribution follows:
+\[
+L_i \rightarrow L_i - (K+1), \quad L_j \rightarrow L_j + 1 \quad \forall j \in \mathcal{N}(i)
+\]
+The redistribution rule assumes that excess workload is distributed equally among neighboring nodes. This simplification ensures conservation of total workload while capturing the local interaction mechanism driving cascades. Although idealized, it provides a tractable framework to study how simple threshold dynamics can generate complex system-wide behavior.
+
+The avalanche size $s$ is defined as the number of instability events in a cascade. Empirically, the distribution follows:
+
+\[
+P(s) \sim s^{-\tau}
+\]
+
+indicating scale-free behavior.
+\subsection{Digital Twin Visualization}
+
+To complement the numerical simulation, a dynamic visualization (digital twin) of the system was developed. In this representation, nodes are displayed as points in a network, with their color indicating their current state:
+
+\begin{itemize}
+\item Green nodes represent stable individuals ($L_i < K$)
+\item Red nodes represent overloaded individuals ($L_i \geq K$)
+\end{itemize}
+
+The evolution of node colors over time provides a real-time depiction of cascade propagation. This visualization allows direct observation of how localized overload events spread through the network, forming avalanches of varying sizes.
+
+\subsection{Parameter Selection}
+
+The parameters used in the simulation were chosen to balance computational efficiency and meaningful system behavior. A moderate network size ($N \approx 30$–$50$) ensures sufficient complexity without excessive computational cost. The connectivity probability $p$ is selected such that the network is neither too sparse nor too dense, allowing cascades to both localize and propagate. The threshold $K$ is chosen to permit both stable operation and frequent overload events, enabling observation of avalanche dynamics.
+
+These choices ensure that the system remains in a regime where both small and large cascades are observable, which is essential for analyzing critical behavior.
+
+\section{Results and Analysis}
+
+The simulation of the proposed model reveals rich dynamical behavior arising from the interplay of stochastic inputs, threshold dynamics, and network connectivity. In particular, the system exhibits cascading overload events (avalanches) of varying sizes, which are analyzed to understand the underlying 
+\subsection{Avalanche Size Distribution}
+
+The avalanche size distribution provides a quantitative measure of cascade behavior in the system. The avalanche size $s$ is defined as the total number of nodes that become unstable during a single cascade event. By recording avalanche sizes over multiple time steps, the statistical properties of cascading dynamics can be analyzed.
+
+The distribution of avalanche sizes was first examined using a log-log plot of frequency versus avalanche size. As shown in Fig.~\ref{fig:t}, the distribution exhibits a clear decreasing trend over several orders of magnitude. Smaller avalanches occur far more frequently than larger ones, while a small number of events span a significant fraction of the network. This indicates a heavy-tailed distribution.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{t.png}
+\caption{Log-log plot of frequency versus avalanche size. The decreasing trend indicates that small avalanches occur frequently, while large avalanches are rare but possible, suggesting a heavy-tailed distribution.}
+\label{fig:t}
+\end{figure}
+
+The approximate linear trend observed in the log-log plot suggests the absence of a characteristic scale in avalanche size, which is a hallmark of scale-free behavior. Such behavior is commonly observed in complex systems, including earthquakes, forest fires, and information cascades, where small perturbations can occasionally trigger large-scale events.
+
+To further quantify this behavior, a power-law model was assumed for the avalanche size distribution:
+
+\[
+P(s) \sim s^{-\tau}
+\]
+
+Taking the logarithm of both sides:
+
+\[
+\log P(s) = -\tau \log s + C
+\]
+
+Thus, a linear relationship is expected between $\log(s)$ and $\log(P(s))$, with slope equal to $-\tau$.
+
+To estimate the exponent $\tau$, linear regression was performed on the log-transformed data. Let:
+
+\[
+x = \log(s), \quad y = \log(P(s))
+\]
+
+Then, the fitted linear model is:
+
+\[
+y = mx + c
+\]
+
+where the slope $m = -\tau$. The fitted result is shown in Fig.~\ref{fig:tfit}, where the data points closely follow a straight line in log-log space.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\textwidth]{tfit.png}
+\caption{Power-law fitting of avalanche size distribution in log-log space. The linear trend and estimated exponent $\tau \approx 1.84$ indicate scale-free, self-organized critical behavior.}
+\label{fig:tfit}
+\end{figure}
+
+The estimated value of the exponent was found to be:
+
+\[
+\tau \approx 1.84
+\]
+
+This value lies within the typical range observed in systems exhibiting self-organized criticality, generally between 1 and 3. The agreement between the empirical data and the fitted line supports the presence of power-law-like behavior in the system.
+
+However, slight deviations from linearity are observed, particularly at larger avalanche sizes. These deviations can be attributed to finite-size effects, limited sampling, and stochastic fluctuations inherent in the simulation. Therefore, the results are interpreted as indicative of \textit{power-law-like} behavior rather than a strict mathematical power law.
+
+Overall, the avalanche size distribution demonstrates that the system is capable of producing cascades across a wide range of magnitudes, reinforcing the idea that global behavior emerges from simple local interactions.
+
+
+\subsection{Role of Connectivity}
+
+The network structure plays a critical role in determining cascade propagation. Nodes are connected through interaction pathways that enable redistribution of load. Regions of higher connectivity facilitate rapid spreading of overload, while sparsely connected regions tend to confine cascades.
+
+This behavior was also evident in the digital twin visualization, where cascades were observed to propagate preferentially through clusters of connected nodes. In some cases, overload remained localized, while in others, it spread across multiple regions of the network, depending on the connectivity pattern.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{ecc.png}
+\caption{Effect of network connectivity on average avalanche size. Increasing connectivity leads to larger cascades due to enhanced propagation pathways.}
+\label{fig:connectivity}
+\end{figure}
+
+As shown in Fig.~\ref{fig:connectivity}, the average avalanche size increases with increasing connection probability $p$, exhibiting an approximately linear trend within the range of parameters considered. This behavior can be understood by noting that in a random network, the expected number of connections per node scales proportionally with $p$, i.e., the average degree is given by $\langle k \rangle \sim pN$.
+
+As connectivity increases, each node interacts with a larger number of neighbors, thereby enhancing the redistribution of load during overload events. When a node becomes unstable, its excess load is distributed to more neighbors, increasing the probability that these neighbors will also exceed their thresholds. This leads to a higher likelihood of triggering subsequent instabilities and amplifying the cascade.
+
+Within the parameter range studied, this results in an approximately proportional relationship between connectivity and average avalanche size, giving rise to the near-linear trend observed in the figure. However, the relationship is not strictly linear, as stochastic fluctuations and variations in local network structure influence the exact propagation of cascades.
+
+Thus, connectivity acts as a key control parameter governing the extent of cascade propagation. Increasing connectivity enhances the system’s susceptibility to large avalanches by providing multiple pathways for disturbance spreading.
+
+
+\subsection{Temporal Evolution of Cascades}
+
+The temporal evolution of avalanche sizes provides insight into the dynamical behavior of the system over time. Figure~\ref{fig:time} shows the variation of avalanche size with time steps.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{Tec.png}
+\caption{Temporal evolution of avalanche sizes showing intermittent bursts of activity.}
+\label{fig:time}
+\end{figure}
+
+As observed in Fig.~\ref{fig:time}, the system exhibits strongly intermittent behavior characterized by extended periods of low or negligible activity interspersed with sudden bursts of large avalanches. During many time steps, the avalanche size remains close to zero or small values, indicating that the system absorbs incoming load without significant redistribution. However, at certain instances, large spikes occur, corresponding to cascading events that propagate across multiple nodes.
+
+This behavior can be understood as a process of gradual load accumulation followed by sudden release. Over time, stochastic inputs (noise) increase the workload across nodes, pushing the system closer to instability. Once a critical configuration is reached, even a small perturbation can trigger a large cascade, leading to rapid redistribution of load.
+
+Such burst-like dynamics are a hallmark of systems operating near criticality. The absence of periodicity or regular patterns in the time series indicates that the system's behavior is governed by internal state fluctuations rather than deterministic external forcing. The timing and size of avalanches are therefore inherently unpredictable.
+
+Mathematically, this can be interpreted as the system evolving toward a marginally stable state, where the probability of triggering a cascade depends sensitively on the current distribution of load across the network. This results in a wide range of avalanche sizes occurring at irregular intervals.
+
+In the context of student workload dynamics, this behavior corresponds to periods of manageable academic load followed by sudden spikes in stress due to clustering of deadlines, assignments, or collaborative dependencies. A student may handle workload efficiently for a period, but once multiple constraints overlap, a small additional task can trigger a cascade of overload affecting multiple individuals.
+
+Thus, the temporal dynamics reinforce the interpretation that workload propagation in such systems is inherently nonlinear and intermittent, rather than smooth or predictable.
+
+\subsection{Visualization of Cascades}
+
+The digital twin simulation provides a direct visual representation of cascading workload dynamics within the student interaction network. Nodes represent individual students, and their states evolve dynamically as workload propagates through connections. A node transitions from a stable state (green) to an overloaded state (red) when its workload exceeds the threshold capacity.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{tc.png}
+    \caption{Digital twin visualization of workload cascades. Red nodes indicate overloaded students, while green nodes represent stable ones. Cascades propagate along network connections.}
+    \label{fig:digital}
+\end{figure}
+
+As shown in Fig.~\ref{fig:digital}, cascades typically originate from localized overload events and propagate through the network via interaction pathways. The spread of overload is governed by connectivity rather than spatial proximity, highlighting the role of network structure in directing cascade dynamics.
+
+The visualization reveals several important features:
+
+\begin{itemize}
+    \item Cascades often originate from a single overloaded node and expand through its neighbors.
+    \item Propagation follows network connections, emphasizing the importance of interaction structure.
+    \item Avalanche patterns vary in size and shape, reflecting the stochastic and dynamic nature of the system.
+\end{itemize}
+
+These observations demonstrate that global cascade behavior emerges from simple local interactions governed by threshold dynamics and connectivity.
+
+This implies that overload is not confined to individuals but can spread through collaborative and dependent interactions. A single student's excess workload may influence peers, leading to clusters of simultaneously overloaded individuals.
+
+Thus, the digital twin provides an intuitive validation of the model, bridging the gap between abstract simulation and real-world workload propagation.
+\subsection{Agent-Based Visualization using NetLogo}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.45\linewidth]{net1.png}
+    \includegraphics[width=0.45\linewidth]{net2.png}
+    
+    \includegraphics[width=0.45\linewidth]{net3.png}
+    \includegraphics[width=0.45\linewidth]{net4.png}
+    
+    \caption{Evolution of cascading workload dynamics in the NetLogo simulation. Overloaded nodes (red) emerge and propagate through the network, forming cascades of varying sizes and spatial extent.}
+    \label{fig:netlogo}
+\end{figure}
+The NetLogo-based agent simulation provides a dynamic visualization of workload propagation in the student network. Each node represents a student, while links denote interaction pathways through which workload can be redistributed.
+
+As shown in Fig.~\ref{fig:netlogo}, overload events emerge at specific nodes (red) and propagate through neighboring connections. The sequence of images illustrates different stages of cascade evolution, ranging from localized overload to widespread propagation across the network.
+
+It is observed that cascades do not spread uniformly but are guided by the underlying connectivity structure. Highly connected regions facilitate rapid propagation, while less connected nodes remain relatively unaffected.
+
+The variability in cascade size and spatial extent highlights the stochastic nature of the system. Small perturbations may either dissipate locally or trigger large-scale cascades depending on the instantaneous load distribution.
+This visualization complements the Python-based simulation by providing an intuitive understanding of cascade dynamics.
+\subsection{Interpretation}
+
+The combined numerical and visual results demonstrate that the system exhibits key signatures of complex behavior. The avalanche size distribution shows a clear separation between frequent small cascades and rare but significant large cascades, indicating a heavy-tailed structure. This implies that the system does not possess a characteristic scale for cascade size.
+
+Furthermore, the temporal evolution reveals intermittent dynamics, where periods of low activity are punctuated by sudden bursts of large avalanches. This behavior reflects the gradual accumulation of workload followed by rapid redistribution once local thresholds are exceeded.
+
+The observed dependence on network connectivity highlights the role of interaction structure in governing cascade propagation. Increased connectivity enhances the likelihood that local overload events will spread across the network, leading to larger cascades.
+
+Taken together, these observations suggest that the system operates in a regime where stability and instability coexist. Small perturbations may either dissipate locally or trigger large-scale cascades depending on the instantaneous configuration of the system.
+
+In the context of student workload, this implies that stress and overload are not purely individual phenomena but emerge from collective interactions. Periods of manageable workload may suddenly transition into widespread stress due to interconnected academic demands.
+
+Thus, the system exhibits behavior consistent with complex adaptive systems, where global dynamics arise from simple local interactions.
+\subsection{Limitations of the Model}
+
+The proposed model captures key features of cascading dynamics but relies on simplifying assumptions. All nodes are assigned the same capacity threshold, whereas real systems exhibit heterogeneous abilities and constraints. The network is modeled as a static random graph, while real interaction networks are dynamic and often structured (e.g., clustered or community-based).
+
+Additionally, workload redistribution is assumed to be equal among neighbors, which may not reflect realistic interaction strengths or preferences. The model also neglects adaptive behavior, where individuals may adjust their strategies under overload.
+
+Finally, finite system size and limited simulation duration may influence the observed avalanche statistics. Despite these limitations, the model provides a useful framework for understanding how local interactions can generate complex global behavior.
+
+\section{Self-Organized Criticality}
+
+The results obtained in this study strongly suggest that the system operates in a regime consistent with \textit{self-organized criticality} (SOC). SOC refers to the tendency of certain dynamical systems to naturally evolve toward a critical state without the need for fine-tuning of external parameters.
+
+One of the primary indicators of SOC is the presence of scale-free avalanche dynamics. The observed avalanche size distribution exhibits a heavy-tailed form, where small cascades occur frequently while large cascades, though rare, remain possible. The approximate power-law behavior indicates the absence of a characteristic scale in the system.
+
+In addition, the temporal evolution of avalanche sizes reveals intermittent bursts of activity separated by relatively quiet periods. This pattern reflects the gradual accumulation of load followed by sudden release, a hallmark of systems poised near criticality.
+
+The emergence of this behavior can be attributed to the interplay of three key mechanisms:
+\begin{itemize}
+\item \textbf{Stochastic input (noise):} Random addition of workload continuously drives the system.
+\item \textbf{Threshold dynamics:} Nodes become unstable once their capacity is exceeded.
+\item \textbf{Local interactions:} Redistribution of load through network connections enables cascade propagation.
+\end{itemize}
+
+These mechanisms collectively drive the system toward a marginally stable state, where even small perturbations can trigger cascades of varying sizes. Importantly, this critical state is not externally imposed but emerges naturally from the internal dynamics of the system.
+
+From the perspective of student workload, this implies that academic systems may inherently operate near a critical threshold. Students accumulate workload over time, and once individual capacities are exceeded, stress propagates through interactions such as collaboration, shared responsibilities, and dependency chains.
+
+As a result, periods of stability can abruptly transition into widespread overload, not necessarily due to a large external shock, but due to the internal organization of the system itself.
+
+Thus, the system demonstrates self-organized critical behavior, where complex global dynamics emerge from simple local rules without centralized control.
+
+\section{Conclusion}
+
+This study demonstrates that cascading workload dynamics in student interaction networks arise naturally from simple local rules involving stochastic input, threshold-based instability, and network-driven redistribution. A key takeaway is that system-wide overload is not solely determined by individual capacity but emerges from the structure and connectivity of interactions.
+
+From a practical perspective, this implies that academic stress can propagate through collaborative networks, suggesting that managing connectivity patterns or workload distribution strategies could help mitigate large-scale overload events.
+
+Future work can extend this model by incorporating heterogeneous capacities, adaptive behavior, and dynamic network structures to better capture real-world interaction patterns and improve predictive capability.
+
+\section{Help from AI Agent}
+
+AI-based tools were used as a supplementary resource during the development of this project. The assistance primarily included conceptual clarification, guidance in structuring the report, and support in implementing, debugging, and refining simulation code in both Python and NetLogo.
+
+The following types of prompts were used:
+
+\begin{itemize}
+\item “Explain avalanche dynamics and self-organized criticality in simple terms.”
+
+\item “Help design a network-based model to simulate cascading workload dynamics.”
+
+\item “Provide Python code to simulate cascading failures with threshold-based redistribution.”
+
+\item “Assist in debugging and optimizing simulation performance.”
+
+\item “Suggest plots to analyze avalanche behavior and connectivity effects.”
+
+\item “Explain the interpretation of log-log distributions and temporal cascade dynamics.”
+
+\item “Help structure a journal-style report for a complexity science project.”
+
+\end{itemize}
+
+All AI-generated outputs were critically evaluated, modified, and adapted to align with the objectives and context of the project. The final model formulation, simulation design, analysis, and interpretations reflect independent understanding and effort.
+
+\section{References}
+\begin{enumerate}
+\item Khanna, R. (2026). \textit{Lecture Notes on Complexity Science in Chemical Industry (CLL 798)}. Department of Chemical Engineering, IIT Delhi.
+\item Adekoya, O. M., and Akune, C. (2023). \textit{Information Overload and Its Effects on Academic Performance of Students}.
+
+\item Revesai, Z., Mutanga, B., and Chani, T. (2025). Information cascades in professional networks: A graph-based study of LinkedIn post engagement. \textit{Journal of Applied Informatics and Computing}, 9(4), 1088–1102. DOI: 10.30871/jaic.v9i4.10212.
+
+\item Bak, P., Tang, C., and Wiesenfeld, K. (1987). Self-organized criticality: An explanation of $1/f$ noise. \textit{Physical Review Letters}, 59(4), 381–384.
+
+\item Newman, M. E. J. (2010). \textit{Networks: An Introduction}. Oxford University Press.
+
+\item Mitchell, M. (2009). \textit{Complexity: A Guided Tour}. Oxford University Press.
+
+
+\end{enumerate}
+\end{document}
